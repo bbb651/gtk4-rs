@@ -1,5 +1,6 @@
 // Take a look at the license at the top of the repository in the LICENSE file.
 
+use crate::prelude::*;
 use crate::{keys::Key, Display, Event, KeymapKey, ModifierType};
 use glib::translate::*;
 use glib::IsA;
@@ -25,6 +26,26 @@ pub trait DisplayExtManual: 'static {
 
     #[doc(alias = "gdk_display_put_event")]
     fn put_event<P: AsRef<Event>>(&self, event: &P);
+
+    /// Equivalent to the C macro `GDK_IS_WAYLAND_DISPLAY`
+    #[doc(alias = "GDK_IS_WAYLAND_DISPLAY")]
+    fn is_wayland(&self) -> bool;
+
+    /// Equivalent to the C macro `GDK_IS_X11_DISPLAY`
+    #[doc(alias = "GDK_IS_X11_DISPLAY")]
+    fn is_x11(&self) -> bool;
+
+    /// Equivalent to the C macro `GDK_IS_MACOS_DISPLAY`
+    #[doc(alias = "GDK_IS_MACOS_DISPLAY")]
+    fn is_macos(&self) -> bool;
+
+    /// Equivalent to the C macro `GDK_IS_WIN32_DISPLAY`
+    #[doc(alias = "GDK_IS_WIN32_DISPLAY")]
+    fn is_win32(&self) -> bool;
+
+    /// Equivalent to the C macro `GDK_IS_BROADWAY_DISPLAY`
+    #[doc(alias = "GDK_IS_BROADWAY_DISPLAY")]
+    fn is_broadway(&self) -> bool;
 }
 
 impl<O: IsA<Display>> DisplayExtManual for O {
@@ -130,5 +151,25 @@ impl<O: IsA<Display>> DisplayExtManual for O {
                 event.as_ref().to_glib_none().0,
             );
         }
+    }
+
+    fn is_wayland(&self) -> bool {
+        self.as_ref().type_().name() == "GdkWaylandDisplay"
+    }
+
+    fn is_x11(&self) -> bool {
+        self.as_ref().type_().name() == "GdkX11Display"
+    }
+
+    fn is_macos(&self) -> bool {
+        self.as_ref().type_().name() == "GdkMacosDisplay"
+    }
+
+    fn is_win32(&self) -> bool {
+        self.as_ref().type_().name() == "GdkWin32Display"
+    }
+
+    fn is_broadway(&self) -> bool {
+        self.as_ref().type_().name() == "GdkBroadwayDisplay"
     }
 }
